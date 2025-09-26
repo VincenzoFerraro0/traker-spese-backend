@@ -9,4 +9,4 @@ const ExchangeRateSchema = new Schema({
   rates: { type: Map, of: Number, required: true }
 }, { timestamps: true });
 
-export default model('ExchangeRate', ExchangeRateSchema);
+export default model('histoCurrenciesModel', ExchangeRateSchema);

@@ -1,11 +1,6 @@
-import mongoose from 'mongoose';
+import mongoose from "mongoose";
 
 const {Schema, model} = mongoose;
-
-const ConvertedAmountSchema = new Schema({
-  currency: { type: String, required: true },
-  amount: { type: Number, required: true }
-}, { _id: false });
 
 const allowedCurrencies = [
   "ADA", "AED", "AFN", "ALL", "AMD", "ANG", "AOA", "ARB", "ARS", "AUD", "AVAX", "AWG", "AZN", "BAM", "BBD", "BDT",
@@ -21,19 +16,22 @@ const allowedCurrencies = [
   "TWD", "TZS", "UAH", "UGX", "USD", "USDC", "USDT", "UYU", "UZS", "VEF", "VES", "VND", "VUV", "WST", "XAF", "XAG",
   "XAU", "XCD", "XCG", "XDR", "XOF", "XPD", "XPF", "XPT", "XRP", "YER", "ZAR", "ZMK", "ZMW", "ZWG", "ZWL"
 ];
-
-const ExpenseSchema = new Schema({
-  title: { type: String, required: true },
-  description: { type: String },
-  expenseDate: { type: Date, required: true },
-  amount: { type: Number, required: true },
-  currency: {
-    type: [String], // array di valute
+/** =====================================
+ *  Schema Settings
+ *  =====================================
+ */
+const SettingsSchema = new Schema({
+  preferredCurrency: {
+    type: [String],
+    enum: allowedCurrencies,
     required: true,
-    enum: allowedCurrencies
-  },
-  convertedAmounts: [ConvertedAmountSchema],
-  category: { type: mongoose.Schema.Types.ObjectId, ref: 'Category' },
+    validate: {
+      validator: function(v) {
+        return v.length > 0; // almeno una valuta preferita
+      },
+      message: props => `Devi selezionare almeno una valuta preferita.`
+    }
+  }
 }, { timestamps: true });
 
-export default model('Expense', ExpenseSchema);
+export default model('settingModel', SettingsSchema);
